@@ -1,0 +1,19 @@
+{
+    "name": "mac/twig-ticket-app",
+    "description": "ticket Easy",
+    "autoload": {
+        "psr-4": {
+            "Mac\\TwigTicketApp\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "brunocode-s",
+            "email": "alainbrunoofficial@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.0",
+        "vercel/php-runtime": "^0.3.0"
+    }
+}

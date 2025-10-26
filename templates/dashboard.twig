@@ -1,0 +1,39 @@
+{% extends "base.twig" %}
+{% block title %}Dashboard - Ticket Easy{% endblock %}
+{% block content %}
+
+<div class="flex-1 max-w-[1440px] mx-auto px-6 py-12">
+    <h1 class="text-3xl font-bold mb-8">Dashboard</h1>
+
+    <div class="grid md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+            <h3 class="text-gray-600 font-semibold">Total Tickets</h3>
+            <p class="text-3xl font-bold text-blue-600 mt-2">
+                {{ tickets|length }}
+            </p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+            <h3 class="text-gray-600 font-semibold">Open Tickets</h3>
+            <p class="text-3xl font-bold text-green-600 mt-2">
+                {{ tickets|filter(t => t.status == 'open')|length }}
+            </p>
+        </div>
+
+        <div class="bg-white shadow-md rounded-2xl p-6 text-center hover:shadow-lg transition-shadow">
+            <h3 class="text-gray-600 font-semibold">Closed Tickets</h3>
+            <p class="text-3xl font-bold text-gray-600 mt-2">
+                {{ tickets|filter(t => t.status == 'closed')|length }}
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-6 text-center">
+        <a href="?page=tickets"
+           class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg">
+           Go to Tickets
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Ticket Easy{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-[1440px] mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="?page=landing" class="text-2xl font-bold text-blue-600">Ticket Easy</a>
+            <nav class="space-x-4">
+                {% if session.ticketapp_session is defined %}
+                    <a href="?page=dashboard" class="text-gray-700 hover:text-blue-600">Dashboard</a>
+                    <a href="?page=tickets" class="text-gray-700 hover:text-blue-600">Tickets</a>
+                    <a href="?page=logout" class="text-red-500 hover:text-red-600">Logout</a>
+                {% else %}
+                    <a href="?page=login" class="text-gray-700 hover:text-blue-600">Login</a>
+                    <a href="?page=signup" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">Get Started</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-inner mt-12">
+        <div class="max-w-[1440px] mx-auto px-6 py-6 text-center text-gray-500">
+            &copy; {{ "now"|date("Y") }} Ticket Easy. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

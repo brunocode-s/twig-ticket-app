@@ -1,0 +1,22 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# PHP Composer
+/vendor/
+composer.lock
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS / IDE files
+.DS_Store
+.idea/
+.vscode/
+
+# Vercel build output
+.vercel/

@@ -1,0 +1,35 @@
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% if tickets is empty %}
+        <div class="col-span-full text-center py-20">
+            <p class="text-gray-500 text-lg">No tickets found</p>
+            <p class="text-gray-400 text-sm mt-2">Create your first ticket to get started</p>
+        </div>
+    {% endif %}
+
+    {% for ticket in tickets %}
+        <div class="bg-white shadow-lg rounded-2xl p-6 flex flex-col justify-between border border-gray-100 hover:shadow-xl transition-all hover:scale-105 duration-300">
+            <div>
+                <h3 class="font-bold text-xl text-gray-800 mb-3">{{ ticket.title }}</h3>
+                <span class="
+                    inline-block px-4 py-1.5 rounded-full text-white text-sm font-medium
+                    {% if ticket.status == 'open' %}bg-gradient-to-r from-green-500 to-emerald-600{% endif %}
+                    {% if ticket.status == 'in_progress' %}bg-gradient-to-r from-amber-500 to-orange-600{% endif %}
+                    {% if ticket.status == 'closed' %}bg-gradient-to-r from-gray-500 to-gray-600{% endif %}
+                ">
+                    {{ ticket.status|replace({'_': ' '})|upper }}
+                </span>
+            </div>
+
+            <form method="POST" class="mt-6 w-full">
+                <input type="hidden" name="id" value="{{ ticket.id }}">
+                <input type="hidden" name="action" value="delete">
+                <button
+                    type="submit"
+                    class="w-full bg-red-50 text-red-600 font-semibold py-2.5 rounded-xl hover:bg-red-100 transition-all border border-red-200"
+                >
+                    Delete Ticket
+                </button>
+            </form>
+        </div>
+    {% endfor %}
+</div>
