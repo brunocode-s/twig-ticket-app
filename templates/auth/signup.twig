@@ -2,74 +2,213 @@
 {% block title %}Sign Up - Ticket Easy{% endblock %}
 
 {% block content %}
+
 <div class="flex flex-col min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+  <main class="flex flex-grow items-center justify-center px-6 py-12">
+    <div class="w-full max-w-md">
+      <div class="bg-white shadow-xl rounded-2xl p-8 backdrop-blur-sm border border-gray-100">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+            Create Account
+          </h2>
+          <p class="text-gray-600">Join us and start managing tickets</p>
+        </div>
 
-    <main class="flex flex-grow items-center justify-center px-6 py-12">
-        <div class="w-full max-w-md">
-            
-            {# Card #}
-            <div class="bg-white shadow-xl rounded-2xl p-8 backdrop-blur-sm border border-gray-100">
-                
-                {# Header #}
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-2">
-                        Create Account
-                    </h2>
-                    <p class="text-gray-600">Join us and start managing tickets</p>
-                </div>
+        {# Server-side error (render inline for non-js users) #}
+        {% if error %}
+          <div class="text-red-500 text-sm mb-4 text-center">{{ error }}</div>
+        {% endif %}
 
-                {# Error Toast if backend sends error #}
-                {% if error %}
-                    <div class="text-red-500 text-sm mb-4 text-center">{{ error }}</div>
-                {% endif %}
+        <div id="toaster" class="fixed top-6 right-6 z-50 hidden">
+          <div id="toast-inner" class="px-4 py-3 rounded-lg shadow-lg text-white"></div>
+        </div>
 
-                {# Form #}
-                <form method="POST" class="space-y-5">
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="you@example.com"
-                            class="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                            required
-                        />
-                    </div>
+        <form id="signupForm" method="POST" class="space-y-5" novalidate>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+            <input id="email" type="email" name="email" placeholder="you@example.com"
+                   class="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                   required />
+          </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-900 mb-2">Password</label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="••••••••"
-                            class="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                            required
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl"
-                    >
-                        Create Account
-                    </button>
-                </form>
-
-                <div class="mt-6 text-center">
-                    <p class="text-gray-600 text-sm">
-                        Already have an account?
-                        <a href="?page=login" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-                            Log in
-                        </a>
-                    </p>
-                </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-900 mb-2">Password</label>
+            <div class="relative">
+              <input id="password" type="password" name="password" placeholder="••••••••"
+                     class="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                     required />
+              <button type="button" id="togglePwd" aria-label="Toggle password visibility"
+                      class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
+                <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  <circle cx="12" cy="12" r="3" stroke-width="1.5"></circle>
+                </svg>
+                <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18"></path>
+                </svg>
+              </button>
             </div>
 
-            <p class="text-center text-gray-500 text-sm mt-6">
-                By signing up, you agree to our Terms and Privacy Policy
-            </p>
+            <div id="strengthWrapper" class="mt-3 hidden">
+              <div class="mt-2 h-2 w-full bg-gray-300 rounded overflow-hidden">
+                <div id="strengthBar" class="h-2 rounded" style="width:0%"></div>
+              </div>
+              <p id="strengthLabel" class="text-sm mt-1 text-gray-700">Strength: </p>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+            <div class="relative">
+              <input id="confirmPassword" type="password" name="confirmPassword" placeholder="••••••••"
+                     class="w-full px-4 py-3 border text-black border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                     required />
+              <button type="button" id="toggleConfirmPwd" aria-label="Toggle confirm password visibility"
+                      class="absolute inset-y-0 right-3 flex items-center focus:outline-none">
+                <svg id="eyeConfirmOpen" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                  <circle cx="12" cy="12" r="3" stroke-width="1.5"></circle>
+                </svg>
+                <svg id="eyeConfirmClosed" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 3l18 18"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button id="submitBtn" type="submit"
+                  class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl">
+            Create Account
+          </button>
+        </form>
+
+        <div class="mt-6 text-center">
+          <p class="text-gray-600 text-sm">Already have an account?
+            <a href="?page=login" class="text-blue-600 font-semibold hover:text-blue-700 transition-colors">Log in</a>
+          </p>
         </div>
-    </main>
+      </div>
+
+      <p class="text-center text-gray-500 text-sm mt-6">By signing up, you agree to our Terms and Privacy Policy</p>
+    </div>
+  </main>
 </div>
+
+<script>
+(function(){
+  const form = document.getElementById('signupForm');
+  const emailEl = document.getElementById('email');
+  const pwdEl = document.getElementById('password');
+  const confirmEl = document.getElementById('confirmPassword');
+  const toaster = document.getElementById('toaster');
+  const toastInner = document.getElementById('toast-inner');
+  const strengthWrapper = document.getElementById('strengthWrapper');
+  const strengthBar = document.getElementById('strengthBar');
+  const strengthLabel = document.getElementById('strengthLabel');
+
+  const togglePwd = document.getElementById('togglePwd');
+  const eyeOpen = document.getElementById('eyeOpen');
+  const eyeClosed = document.getElementById('eyeClosed');
+  const toggleConfirm = document.getElementById('toggleConfirmPwd');
+  const eyeConfirmOpen = document.getElementById('eyeConfirmOpen');
+  const eyeConfirmClosed = document.getElementById('eyeConfirmClosed');
+
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+  function validatePassword(password) {
+    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}$/;
+    return re.test(password);
+  }
+  function passwordStrength(password) {
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
+    if (/[!@#\$%\^&\*]/.test(password)) score++;
+    return score;
+  }
+  function getPasswordStrengthLabel(score) {
+    if (score <= 2) return { label: 'Weak', colorClass: 'bg-red-500' };
+    if (score === 3) return { label: 'Medium', colorClass: 'bg-yellow-400' };
+    if (score >= 4) return { label: 'Strong', colorClass: 'bg-green-500' };
+  }
+  function showToast(message, type = 'error', duration = 3500) {
+    toastInner.textContent = message;
+    toastInner.className = 'px-4 py-3 rounded-lg shadow-lg text-white';
+    toastInner.classList.add(type === 'success' ? 'bg-green-500' : 'bg-red-500');
+    toaster.classList.remove('hidden');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => { toaster.classList.add('hidden'); }, duration);
+  }
+
+  togglePwd.addEventListener('click', () => {
+    const isPwd = pwdEl.type === 'password';
+    pwdEl.type = isPwd ? 'text' : 'password';
+    eyeOpen.classList.toggle('hidden');
+    eyeClosed.classList.toggle('hidden');
+  });
+
+  toggleConfirm.addEventListener('click', () => {
+    const isPwd = confirmEl.type === 'password';
+    confirmEl.type = isPwd ? 'text' : 'password';
+    eyeConfirmOpen.classList.toggle('hidden');
+    eyeConfirmClosed.classList.toggle('hidden');
+  });
+
+  pwdEl.addEventListener('input', () => {
+    const pwd = pwdEl.value || '';
+    if (!pwd) {
+      strengthWrapper.classList.add('hidden');
+      strengthBar.style.width = '0%';
+      strengthBar.className = 'h-2 rounded';
+      strengthLabel.textContent = 'Strength:';
+      return;
+    }
+    strengthWrapper.classList.remove('hidden');
+    const score = passwordStrength(pwd);
+    const percent = (score / 5) * 100;
+    const { label, colorClass } = getPasswordStrengthLabel(score);
+    strengthBar.style.width = percent + '%';
+    strengthBar.className = 'h-2 rounded ' + colorClass;
+    strengthLabel.textContent = 'Strength: ' + label;
+  });
+
+  form.addEventListener('submit', function(e) {
+    const email = emailEl.value.trim();
+    const password = pwdEl.value;
+    const confirmPassword = confirmEl.value;
+
+    if (!validateEmail(email)) {
+      e.preventDefault();
+      showToast('Please enter a valid email address', 'error');
+      emailEl.focus();
+      return false;
+    }
+    if (!validatePassword(password)) {
+      e.preventDefault();
+      showToast('Password must be at least 8 characters and include uppercase, lowercase, number, and special character.', 'error');
+      pwdEl.focus();
+      return false;
+    }
+    if (password !== confirmPassword) {
+      e.preventDefault();
+      showToast('Passwords do not match!', 'error');
+      confirmEl.focus();
+      return false;
+    }
+    return true; // allow POST
+  });
+
+  // Safely inject server-side error into JS as a single expression
+  const serverError = {{ (error is defined and error) ? ('"' ~ error|e('js') ~ '"') : 'null' }};
+  if (serverError) {
+    document.addEventListener('DOMContentLoaded', () => showToast(serverError, 'error', 5000));
+  }
+
+})();
+</script>
+
 {% endblock %}
